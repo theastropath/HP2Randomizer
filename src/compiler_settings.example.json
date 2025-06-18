@@ -1,0 +1,8 @@
+{
+    "default": {
+        "source_path": "D:/HP2Backup/",
+        "out_dir": "D:/HP2/",
+        "mods_paths": ["./"],
+        "preproc_definitions": { }
+    }
+}
