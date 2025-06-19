@@ -59,11 +59,9 @@ function RollSeed()
     hp2r = class'HP2Rando'.default.hp2r;
 
     log("RollSeed()");
-    ClientMessage("RollSeed()");
 
     if (seed!=-1){
         log("Seed was already set in player to "$seed);
-        ClientMessage("Seed was already set in player to "$seed);
         hp2r.seed = seed;
         hp2r.tseed = seed;
         return;
@@ -77,7 +75,6 @@ function RollSeed()
     //bSetSeed = 0;
     seed = hp2r.rng(1000000);
     log("Seed after HP2R.RNG = "$seed);
-    ClientMessage("Seed after HP2R.RNG = "$seed);
     hp2r.seed = seed;
     hp2r.tseed = seed;
 }
