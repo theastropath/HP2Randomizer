@@ -4,6 +4,11 @@ simulated function PreFirstEntry()
 {
     Super.PreFirstEntry();
     l("PreFirstEntry");
+    l("RNG(100) = "$rng(100));
+    l("RNG(100) = "$rng(100));
+    l("RNG(100) = "$rng(100));
+    l("RNG(100) = "$rng(100));
+    l("RNG(100) = "$rng(100));
 }
 
 simulated function FirstEntry()

@@ -65,6 +65,19 @@ simulated final function #var(PlayerPawn) player(optional bool quiet)
     return p;
 }
 
+static function int Ceil(float f)
+{
+    local int ret;
+    ret = f;
+    if( float(ret) < f )
+        ret++;
+    return ret;
+}
+
+static function int imod(int a, int b)
+{// % converts to float in UnrealScript
+    return a-(a/b*b);
+}
 
 /*
 ========= LOGGING FUNCTIONS
@@ -125,4 +138,9 @@ simulated function err(coerce string message, optional bool skip_player_message)
 #endif
 
     //class'DXRTelemetry'.static.SendLog(GetDXR(), Self, "ERROR", message);
+}
+
+defaultproperties
+{
+    bPersistent=True //Make sure things stick around if we want them to (ie. aren't transient)
 }
