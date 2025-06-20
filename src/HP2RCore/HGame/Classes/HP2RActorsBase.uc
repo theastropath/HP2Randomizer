@@ -26,6 +26,8 @@ function CheckConfig()
 
     i=0;
     _skipactor_types[i++] = class'InvisibleSpawn';
+    _skipactor_types[i++] = class'RiddlesDiary';
+    _skipactor_types[i++] = class'JarBeans';
 
     Super.CheckConfig();
 }
