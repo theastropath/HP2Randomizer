@@ -65,6 +65,17 @@ simulated final function #var(PlayerPawn) player(optional bool quiet)
     return p;
 }
 
+static function string ActorToString( Actor a )
+{
+    local string out;
+    out = a.Class.Name$"."$a.Name$"("$a.Location$")";
+    if(a.tag != '')
+        out = out @ a.tag;
+    if( a.Base != None && a.Base.Class!=class'LevelInfo' )
+        out = out $ " (Base:"$a.Base.Name$")";
+    return out;
+}
+
 static function int Ceil(float f)
 {
     local int ret;

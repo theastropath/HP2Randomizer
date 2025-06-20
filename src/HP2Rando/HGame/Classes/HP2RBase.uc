@@ -153,3 +153,8 @@ simulated function float rngexp(float origmin, float origmax, float curve)
     f = FClamp( f, origmin, origmax );
     return f;
 }
+
+simulated function bool chance_single(float percent)
+{
+    return rngf()*100.0 < percent;
+}

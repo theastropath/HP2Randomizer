@@ -150,7 +150,8 @@ function vanilla_modules()
     local int i;
     l("Loading vanilla modules");
     modules_to_load[i++] = "HP2RBaseTestModule";
-    //modules_to_load[i++] = "DXRMissions";
+    modules_to_load[i++] = "HP2RSwapItems";
+    modules_to_load[i++] = "HP2RSpellLessons";
 }
 
 
@@ -210,7 +211,6 @@ simulated event Tick(float deltaTime)
 
 function HP2RTick(float deltaTime)
 {
-    local HP2RMapRandoInfo mapRando;
     local int i;
 
     if(runPostFirstEntry)
@@ -232,6 +232,19 @@ function HP2RTick(float deltaTime)
         Disable('Tick');
         bTickEnabled = false;
     }
+}
+
+function ChangeGameState (string strNewGameState)
+{
+    local HP2RMapRandoInfo mapRando;
+
+    mapRando = GetMapRandoInfo();
+
+    l("Changing Game State from "$ mapRando.LastGameState $" to " $ strNewGameState);
+
+    mapRando.SetGameState(strNewGameState);
+
+    //Re-randomize?
 }
 
 simulated final function HP2RBase FindModule(class<HP2RBase> moduleclass, optional bool bSilent)

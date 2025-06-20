@@ -30,6 +30,16 @@ exec function DumpSeed()
     ClientMessage("HP2Rando is "$hp2r);
 }
 
+function bool SetGameState (string strNewGameState)
+{
+    local bool bRet;
+    bRet = Super.SetGameState(strNewGameState);
+
+    hp2r.ChangeGameState(strNewGameState);
+
+    return bRet;
+}
+
 event TravelPostAccept()
 {
     Super.TravelPostAccept();
@@ -82,6 +92,6 @@ function RollSeed()
 
 defaultproperties
 {
-     bAutoCenterCamera=False
+     bAutoCenterCamera=False //Autocentre camera sucks ass
      seed=-1
 }
