@@ -53,20 +53,14 @@ event TravelPostAccept()
 
 event PreClientTravel()
 {
-    local HP2Rando hp2r;
-
     Super.PreClientTravel();
 
-    hp2r = class'HP2Rando'.default.hp2r;
     hp2r.PreTravel();
 }
 
 function RollSeed()
 {
-    local HP2Rando hp2r;
     local string seedInput;
-
-    hp2r = class'HP2Rando'.default.hp2r;
 
     log("RollSeed()");
 

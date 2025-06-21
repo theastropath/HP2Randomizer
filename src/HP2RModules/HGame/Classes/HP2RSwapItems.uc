@@ -14,11 +14,12 @@ function FirstEntry()
     ClearClassesList(classes);
     i=0;
     classes[i++]=class'HGame.GenericSpawner';
-    classes[i++]=class'HGame.chestbronze';
-    //TODO: Include more classes, like the bronze cauldrons (that aren't bPersistent normally)
-    //Maybe non-persistent things should be shuffled together amongst themselves?
+    classes[i++]=class'HGame.chestbronze'; //The other chest types subclass from this
+    classes[i++]=class'HGame.BronzeCauldron';
+    //TODO: Include more classes?
+
     chance = 100.0;
-    l("swapping pool: GenericSpawner and chestbronze, chance: "$chance);
+    l("swapping pool: Spawners, chance: "$chance);
     SwapAllPooled(classes,chance);
-    l("done swapping pool: GenericSpawner and chestbronze");
+    l("done swapping pool: Spawners");
 }

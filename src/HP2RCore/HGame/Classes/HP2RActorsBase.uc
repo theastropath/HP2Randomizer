@@ -108,7 +108,7 @@ function SwapAllPooled(class<Actor> classes[10], float percent_chance)
 }
 
 
-function bool Swap(Actor a, Actor b, optional bool retainOrders)
+function bool Swap(Actor a, Actor b)
 {
     local vector newloc, oldloc, aloc, bloc;
     local Vector HitLocation, HitNormal;
@@ -131,7 +131,7 @@ function bool Swap(Actor a, Actor b, optional bool retainOrders)
     newloc = b.Location;
 
     bloc = oldloc + (b.CollisionHeight - a.CollisionHeight) * vect(0,0,1);
-    bsuccess = SetActorLocation(b, bloc, retainOrders );
+    bsuccess = SetActorLocation(b, bloc );
     a.SetCollision(AbCollideActors, AbBlockActors, AbBlockPlayers);
     if( bsuccess == false ) {
         warning("bsuccess failed to move " $ ActorToString(b) $ " into location of " $ ActorToString(a) );
@@ -144,7 +144,7 @@ function bool Swap(Actor a, Actor b, optional bool retainOrders)
                 //There's a wall or something between the locations, this new location shouldn't have succeeded
                 //Move it back to the original location and give up
                 warning("Should have moved to "$bloc$" but ended up at "$b.Location$" instead (distance="$VSize(bloc - b.Location)$")");
-                SetActorLocation(b, newloc, retainOrders);
+                SetActorLocation(b, newloc);
                 warning("bsuccess moved " $ ActorToString(b) $ " into location of " $ ActorToString(a) $ ", but was moved out of line of sight of intended location ("$HitActor$" in the way)");
                 return False;
             }
@@ -152,10 +152,10 @@ function bool Swap(Actor a, Actor b, optional bool retainOrders)
     }
 
     aloc = newloc + (a.CollisionHeight - b.CollisionHeight) * vect(0,0,1);
-    asuccess = SetActorLocation(a, aloc, retainOrders);
+    asuccess = SetActorLocation(a, aloc);
     if( asuccess == false ) {
         warning("asuccess failed to move " $ ActorToString(a) $ " into location of " $ ActorToString(b) );
-        SetActorLocation(b, newloc, retainOrders);
+        SetActorLocation(b, newloc);
         return false;
     } else if (VSize(aloc - a.Location)>5) {
         //Move succeeded, but was kind of far from where it should be
@@ -164,8 +164,8 @@ function bool Swap(Actor a, Actor b, optional bool retainOrders)
             //There's a wall or something between the locations, this new location shouldn't have succeeded
             //Move it back to the original location and give up
             warning("Should have moved to "$aloc$" but ended up at "$a.Location$" instead (distance="$VSize(aloc - a.Location)$")");
-            SetActorLocation(a, oldloc, retainOrders);
-            SetActorLocation(b, newloc, retainOrders);
+            SetActorLocation(a, oldloc);
+            SetActorLocation(b, newloc);
             warning("asuccess moved " $ ActorToString(a) $ " into location of " $ ActorToString(b) $ ", but was moved out of line of sight of intended location ("$HitActor$" in the way)");
             return False;
         }
@@ -210,7 +210,7 @@ function bool SkipActor(Actor a)
     return false;
 }
 
-function bool SetActorLocation(Actor a, vector newloc, optional bool retainOrders)
+function bool SetActorLocation(Actor a, vector newloc)
 {
     if( ! a.SetLocation(newloc) ) {
         return false;
