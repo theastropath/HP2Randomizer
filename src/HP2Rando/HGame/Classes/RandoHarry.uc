@@ -30,6 +30,11 @@ exec function DumpSeed()
     ClientMessage("HP2Rando is "$hp2r);
 }
 
+exec function DumpLevelName()
+{
+    ClientMessage("Current Level is "$Level.LevelEnterText);
+}
+
 function bool SetGameState (string strNewGameState)
 {
     local bool bRet;
@@ -56,6 +61,8 @@ event PreClientTravel()
     Super.PreClientTravel();
 
     hp2r.PreTravel();
+
+    hp2r = None;
 }
 
 function RollSeed()

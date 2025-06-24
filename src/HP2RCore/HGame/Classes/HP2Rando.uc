@@ -12,6 +12,7 @@ var config int rando_beaten;
 
 var transient bool runPostFirstEntry, runPostAnyEntry;
 var transient bool bTickEnabled;// bTickEnabled is just for HP2RandoTests to inspect
+var transient bool playerIsReady;
 
 var int seed, tseed;
 var transient private int CrcTable[256]; // for string hashing to do more stable seeding
@@ -20,7 +21,7 @@ var HP2Rando hp2r;
 
 function InitRando()
 {
-    localURL = Caps(GetURLMap());
+    localURL = Caps(Level.LevelEnterText); //LevelEnterText is the actual map file name
     log("InitRando: LocalURL is "$localURL);
 
     hp2r = self;
@@ -40,6 +41,12 @@ function InitRando()
 
 function PlayerReady()
 {
+    if (playerIsReady){
+        l("Player is already ready!");
+        return;
+    }
+    playerIsReady=true;
+    l("PlayerReady in "$localURL);
     player.RollSeed();
     l("HP2R InitRando - seed: "$seed$"  tseed: "$tseed);
 
@@ -145,14 +152,17 @@ function CheckConfig()
     Super.CheckConfig();
 }
 
+//#region Vanilla Modules
 function vanilla_modules()
 {
     local int i;
     l("Loading vanilla modules");
     modules_to_load[i++] = "HP2RBaseTestModule";
+    modules_to_load[i++] = "HP2RFixups";
     modules_to_load[i++] = "HP2RSwapItems";
     modules_to_load[i++] = "HP2RSpellLessons";
 }
+//#endregion
 
 
 function HP2RBase LoadModule(class<HP2RBase> moduleclass, optional bool forcenew)
@@ -359,4 +369,9 @@ simulated final function int Crc(coerce string Text) {
         CrcValue = (CrcValue >>> 8) ^ CrcTable[Asc(Mid(Text, IndexChar, 1)) ^ (CrcValue & 0xff)];
 
     return CrcValue;
+}
+
+defaultproperties
+{
+    bPersistent=False
 }

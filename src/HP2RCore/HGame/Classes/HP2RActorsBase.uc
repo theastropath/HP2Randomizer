@@ -1,6 +1,6 @@
 class HP2RActorsBase extends HP2RBase abstract;
 
-var class<Actor> _skipactor_types[6];
+var class<Actor> _skipactor_types[10];
 
 struct LocationNormal {
     var vector loc;
@@ -32,13 +32,33 @@ function CheckConfig()
     Super.CheckConfig();
 }
 
-function SwapAll(string classname, float percent_chance)
+function AddSkipActorType(class<Actor> skip)
+{
+    local int i;
+    for (i=0;i<ArrayCount(_skipactor_types);i++)
+    {
+        if (_skipactor_types[i]!=None) continue;
+        _skipactor_types[i]=skip;
+        return;
+    }
+}
+
+function ClearSkipActorList()
+{
+    local int i;
+    for (i=0;i<ArrayCount(_skipactor_types);i++)
+    {
+        _skipactor_types[i]=None;
+    }
+}
+
+function SwapAll(string classname, float percent_chance, optional bool skipNonPersistent, optional bool skipPersistent)
 {
     local Class<Actor> classes[10];
 
     classes[0] = GetClassFromString(classname, class'Actor');
 
-    SwapAllPooled(classes,percent_chance);
+    SwapAllPooled(classes,percent_chance,skipNonPersistent,skipPersistent);
 }
 
 function bool IsActorListedClass(Actor a, class<Actor> classes[10])
@@ -64,7 +84,7 @@ function ClearClassesList(out class<Actor> classes[10])
 }
 
 //Swap all the items in a list of actor classes in a single pool
-function SwapAllPooled(class<Actor> classes[10], float percent_chance)
+function SwapAllPooled(class<Actor> classes[10], float percent_chance, optional bool skipNonPersistent, optional bool skipPersistent)
 {
     local string seedStr;
     local Actor temp[4096];
@@ -83,6 +103,8 @@ function SwapAllPooled(class<Actor> classes[10], float percent_chance)
     {
         if( !IsActorListedClass(a,classes) ) continue;
         if( SkipActor(a) ) continue;
+        if (skipNonPersistent && !a.bPersistent) continue;
+        if (skipPersistent && a.bPersistent) continue;
         temp[num++] = a;
     }
 
@@ -116,6 +138,7 @@ function bool Swap(Actor a, Actor b)
     local bool asuccess, bsuccess;
     local Actor abase, bbase, HitActor;
     local bool AbCollideActors, AbBlockActors, AbBlockPlayers;
+    local bool BbCollideActors, BbBlockActors, BbBlockPlayers;
     local EPhysics aphysics, bphysics;
 
     if( a == b ) return true;
@@ -125,14 +148,20 @@ function bool Swap(Actor a, Actor b)
     AbCollideActors = a.bCollideActors;
     AbBlockActors = a.bBlockActors;
     AbBlockPlayers = a.bBlockPlayers;
-    a.SetCollision(false, false, false);
+
+    BbCollideActors = b.bCollideActors;
+    BbBlockActors = b.bBlockActors;
+    BbBlockPlayers = b.bBlockPlayers;
 
     oldloc = a.Location;
     newloc = b.Location;
 
+    a.SetCollision(false, false, false);
+    b.SetCollision(false, false, false);
     bloc = oldloc + (b.CollisionHeight - a.CollisionHeight) * vect(0,0,1);
     bsuccess = SetActorLocation(b, bloc );
     a.SetCollision(AbCollideActors, AbBlockActors, AbBlockPlayers);
+    b.SetCollision(BbCollideActors, BbBlockActors, BbBlockPlayers);
     if( bsuccess == false ) {
         warning("bsuccess failed to move " $ ActorToString(b) $ " into location of " $ ActorToString(a) );
         return false;
@@ -150,9 +179,12 @@ function bool Swap(Actor a, Actor b)
             }
         }
     }
-
+    a.SetCollision(false, false, false);
+    b.SetCollision(false, false, false);
     aloc = newloc + (a.CollisionHeight - b.CollisionHeight) * vect(0,0,1);
     asuccess = SetActorLocation(a, aloc);
+    a.SetCollision(AbCollideActors, AbBlockActors, AbBlockPlayers);
+    b.SetCollision(BbCollideActors, BbBlockActors, BbBlockPlayers);
     if( asuccess == false ) {
         warning("asuccess failed to move " $ ActorToString(a) $ " into location of " $ ActorToString(b) );
         SetActorLocation(b, newloc);
@@ -212,7 +244,7 @@ function bool SkipActor(Actor a)
 
 function bool SetActorLocation(Actor a, vector newloc)
 {
-    if( ! a.SetLocation(newloc) ) {
+    if( ! a.SetLocation2(newloc) ) {
         return false;
     }
 
