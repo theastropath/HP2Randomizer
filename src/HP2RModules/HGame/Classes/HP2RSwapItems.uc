@@ -21,7 +21,7 @@ function FirstEntry()
     ClearSkipActorList();
     AddSkipActorType(class'InvisibleSpawn');
 
-    chance = 100.0; //TODO: make this a configurable
+    chance = GetGlobalFloat("HP2RSpawnerRando");
     l("swapping pool: Spawners, chance: "$chance);
     SwapAllPooled(classes,chance,true); //Skip anything non-persistent
     l("done swapping pool: Spawners");
@@ -53,7 +53,7 @@ function AnyEntry()
     AddSkipActorType(class'BooksLargeGroup1'); //This is a bit too big when included in the same pool
     AddSkipActorType(class'BooksOwlBookendBooks'); //This is a bit too big when included in the same pool
 
-    chance = 100.0;
+    chance = GetGlobalFloat("HP2RKnickKnackRando");
     l("Swapping Knick-Knacks: "$hp2r.localURL);
     l("swapping pool: Knick-Knacks, chance: "$chance);
     SwapAllPooled(classes,chance,false,true); //Only swap non-persistent things

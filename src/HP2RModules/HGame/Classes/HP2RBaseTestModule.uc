@@ -4,6 +4,8 @@ simulated function PreFirstEntry()
 {
     Super.PreFirstEntry();
     l("PreFirstEntry");
+
+    SetSeed( "HP2RBaseTestModule" );
     l("RNG(100) = "$rng(100));
     l("RNG(100) = "$rng(100));
     l("RNG(100) = "$rng(100));

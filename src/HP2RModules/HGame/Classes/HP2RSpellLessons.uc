@@ -4,13 +4,15 @@ class HP2RSpellLessons extends HP2RActorsBase transient;
 function AnyEntry()
 {
     local SpellLessonTrigger slt;
-    local float f;
+    local float min,max;
 
     SetSeed( "HP2RSpellLessons ArrowDirections" );
-    RandomizeSpellLessonArrows(3); //TODO: use a config option to select which randomization mode
+    RandomizeSpellLessonArrows();
 
     SetSeed( "HP2RSpellLessons WandSpeed" );
-    RandomizeSpellLessonWandSpeed(0.75,1.5);//TODO: Make this rando range configurable
+    min = GetGlobalFloat("HP2RSpellWandSpeedMin");
+    max = GetGlobalFloat("HP2RSpellWandSpeedMax");
+    RandomizeSpellLessonWandSpeed(min,max);
 }
 //#endregion
 
@@ -34,26 +36,35 @@ function RandomizeSpellLessonWandSpeed(float min, float max)
 
 //#region Arrow Rando
 //Randomize all spell lessons with the same method (is this actually how it should be?)
-function RandomizeSpellLessonArrows(int mode)
+function RandomizeSpellLessonArrows()
 {
+    local string mode;
+
+    mode = GetGlobalString("HP2RSpellArrowDirMode");
+
+    l("RandomizeSpellLessonArrows: "$mode);
+
     switch(mode){
-        case 0:
+        case "ExistingChaos":
             //Each existing arrow gets a completely randomly selected arrow direction
             ExistingArrowsChaosRando();
             break;
-        case 1:
+        case "FullChaos":
             //Randomize *all* slots, including currently empty ones, to any arrow type, including None
             FullArrowChaosRando();
             break;
-        case 2:
+        case "ConsistentArrows":
             //Randomize each arrow direction to a new direction (so all Up become Left, for example)
             ExistingArrowsConsistentRando();
             break;
-        case 3:
+        case "PatternChaos":
             //Normally the game repeats a pattern multiple times.  Generate a new (equally long) pattern
             //and repeat that the same number of times. Pattern carries through each round, increasing 
             //in length like in vanilla.
             ExistingArrowsChaosPatternRando();
+            break;
+        case "Vanilla":
+            //Don't randomize the arrows at all
             break;
         default:
             l("Unknown Spell Lesson Arrow Randomization mode "$mode);

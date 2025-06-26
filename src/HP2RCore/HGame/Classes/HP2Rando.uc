@@ -14,6 +14,8 @@ var transient bool runPostFirstEntry, runPostAnyEntry;
 var transient bool bTickEnabled;// bTickEnabled is just for HP2RandoTests to inspect
 var transient bool playerIsReady;
 
+var HP2RandoSetupConfigWindow SetupWindow;
+
 var int seed, tseed;
 var transient private int CrcTable[256]; // for string hashing to do more stable seeding
 
@@ -47,10 +49,31 @@ function PlayerReady()
     }
     playerIsReady=true;
     l("PlayerReady in "$localURL);
-    player.RollSeed();
-    l("HP2R InitRando - seed: "$seed$"  tseed: "$tseed);
 
-    RandoEnter();
+    if (localURL=="PRIVETDR.UNR"){
+        Player.ClientMessage("Loading Rando Setup Window!");
+        HP2RandoSetupWindow(); //The setup window will call RandoEnter once it's closed
+    } else {
+        RandoEnter();
+    }
+}
+
+function HP2RandoSetupWindow()
+{
+    if ( SetupWindow == None )
+    {
+        HPConsole(Player.Player.Console).LaunchUWindow(true);
+        SetupWindow = HP2RandoSetupConfigWindow(HPConsole(Player.Player.Console).Root.CreateWindow(Class'HP2RandoSetupConfigWindow',64.0,64.0,320.0,320.0));
+        SetupWindow.ShowWindow();
+    }
+    else if ( SetupWindow.bUWindowActive )
+    {
+        SetupWindow.Close();
+    }
+    else 
+    {
+        SetupWindow.ActivateWindow(0,False);
+    }
 }
 
 function HP2RMapRandoInfo GetMapRandoInfo()
@@ -60,11 +83,47 @@ function HP2RMapRandoInfo GetMapRandoInfo()
     return mapRando;
 }
 
+function RollSeed()
+{
+    local string seedInput;
+    local string globalSeedStr;
+    local int seed;
+
+    log("RollSeed()");
+
+    globalSeedStr = GetGlobalString("HP2RSeed");
+    if (globalSeedStr!=""){
+        seed = int(globalSeedStr);
+        log("Seed was already set to "$seed);
+        hp2r.seed = seed;
+        hp2r.tseed = seed;
+        return;
+    }
+
+    //No seed is set - maybe the field was left blank at setup?  Roll a fresh seed and save it!
+
+    seedInput = Rand(MaxInt) @ (FRand()*1000000) @ (Level.TimeSeconds*1000);
+    seed = hp2r.Crc( seedInput );
+    log("Initial Crc( "$seedInput$" ) = "$seed);
+    hp2r.seed = seed;
+    hp2r.tseed = seed;
+    //bSetSeed = 0;
+    seed = hp2r.rng(1000000);
+    log("Seed after HP2R.RNG = "$seed);
+    hp2r.seed = seed;
+    hp2r.tseed = seed;
+
+    //Store it
+    SetGlobalInt("HP2RSeed",seed);
+}
+
 function RandoEnter()
 {
     local int i;
     local bool firstTime;
     local HP2RMapRandoInfo mapRando;
+
+    RollSeed();
 
     Enable('Tick');
     bTickEnabled=true;
