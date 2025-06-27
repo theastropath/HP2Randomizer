@@ -1,32 +1,32 @@
 class HP2RandoSetupConfigWindow extends UWindowFramedWindow;
-function BeginPlay()
-{
-    Super.BeginPlay();
-    WindowTitle = "HP2 Randomizer Settings";
-    ClientClass = class'HP2RandoSetupWindow';
-    SetAcceptsFocus();
-
-    bTransient = False;
-    bUWindowActive = True;
-    bLeaveOnscreen = True;
-    bAcceptsHotKeys = True;
-    bSizable = False;
-}
 
 function Created()
 {
     Super.Created();
-    bLeaveOnscreen = True;
     bSizable = False;
     bStatusBar = True;
+    bAcceptsHotKeys = True;
+    bTransient = False;
+    bUWindowActive = True;
 
-    SetSize(150, 300);
+    CloseBox.HideWindow(); //Don't show the close button, only allow closing via the Done button
+
     WinLeft = (ParentWindow.WinWidth - WinWidth) / 2;
     WinTop = (ParentWindow.WinHeight - WinHeight) / 2;
 
     SetAcceptsFocus();
 
 }
+
+function Tick(float Delta)
+{
+    if(ParentWindow.ActiveWindow != Self){
+        ActivateWindow(0, False);
+    }
+}
+
 defaultproperties
 {
+    ClientClass=Class'HP2RandoSetupScrollClient'
+    WindowTitle="HP2 Randomizer Settings"
 }

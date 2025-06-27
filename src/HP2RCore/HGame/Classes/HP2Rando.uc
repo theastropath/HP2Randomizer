@@ -63,7 +63,7 @@ function HP2RandoSetupWindow()
     if ( SetupWindow == None )
     {
         HPConsole(Player.Player.Console).LaunchUWindow(true);
-        SetupWindow = HP2RandoSetupConfigWindow(HPConsole(Player.Player.Console).Root.CreateWindow(Class'HP2RandoSetupConfigWindow',64.0,64.0,320.0,320.0));
+        SetupWindow = HP2RandoSetupConfigWindow(HPConsole(Player.Player.Console).Root.CreateWindow(Class'HP2RandoSetupConfigWindow',64.0,64.0,150.0,300.0));
         SetupWindow.ShowWindow();
     }
     else if ( SetupWindow.bUWindowActive )

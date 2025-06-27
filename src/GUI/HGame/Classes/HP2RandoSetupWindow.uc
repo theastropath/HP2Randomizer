@@ -7,9 +7,27 @@ var ScalingComboBox    spellArrowDirModeEdit;
 var UWindowEditControl spawnerRandoEdit;
 var UWindowEditControl knickknackRandoEdit;
 
+var HGameButton doneButton;
+
 var Color colWhite,colBlack;
 
 var bool bClosing;
+
+
+
+const BUTTON_WIDTH=64;
+const BUTTON_HEIGHT=32;
+
+const OPTION_WIDTH=125;
+const OPTION_HEIGHT=15;
+
+const SETTINGS_START = 5.0;
+const SETTINGS_OFFSET= 20.0;
+const DONE_BUTTON_OFFSET = 100.0;
+
+
+
+
 
 //#region Window Layout
 function Created()
@@ -17,6 +35,10 @@ function Created()
     local int ControlWidth, ControlLeft, ControlRight;
     local int CenterWidth, CenterPos, i;
     local float ControlOffset;
+
+    HPConsole(Root.Console).bLockMenus=True; //Prevent the menu from being opened
+    SetAcceptsFocus();
+    bUWindowActive = True;
     
     ControlWidth = WinWidth/10;
     ControlLeft = (WinWidth/5 - ControlWidth)/2;
@@ -24,17 +46,17 @@ function Created()
     CenterWidth = (WinWidth/4)*3;
     CenterPos = (WinWidth - CenterWidth)/2;
     
-    ControlOffset=5.0;
+    ControlOffset=SETTINGS_START;
 
     log("Created RandoSetupWindow!  ControlLeft: "$ControlLeft$"  ControlOffset: "$ControlOffset$"   WinWidth: "$WinWidth);
 
     seedEdit = CreateNumInput("Seed: ", "", 6, ControlLeft, ControlOffset);
 
     //New Section
-    ControlOffset+=20.0;
+    ControlOffset+=SETTINGS_OFFSET;
 
     //Spell Lesson Arrow Rando Mode
-    ControlOffset+=20.0;
+    ControlOffset+=SETTINGS_OFFSET;
     spellArrowDirModeEdit = CreateComboBox("Spell Lesson Arrow Mode: ",ControlLeft,ControlOffset);
     spellArrowDirModeEdit.AddItem("Vanilla Arrows","Vanilla");
     spellArrowDirModeEdit.AddItem("Existing Arrow Chaos","ExistingChaos");
@@ -44,35 +66,81 @@ function Created()
     SetComboBoxStartValue(spellArrowDirModeEdit,"PatternChaos"); //Default to Chaos Pattern
 
     //Minimum 
-    ControlOffset+=20.0;
+    ControlOffset+=SETTINGS_OFFSET;
     spellWandSpeedMinEdit = CreateNumInput("Spell Lesson Wand Speed Min %: ", "75", 3, ControlLeft, ControlOffset);
 
-    ControlOffset+=20.0;
+    ControlOffset+=SETTINGS_OFFSET;
     spellWandSpeedMaxEdit = CreateNumInput("Spell Lesson Wand Speed Max %: ", "150", 3, ControlLeft, ControlOffset);
 
     //New section
-    ControlOffset+=20.0;
+    ControlOffset+=SETTINGS_OFFSET;
 
     //Spawner Rando odds
-    ControlOffset+=20.0;
+    ControlOffset+=SETTINGS_OFFSET;
     spawnerRandoEdit = CreateNumInput("Spawner Rando %: ", "100", 3, ControlLeft, ControlOffset);
 
     //Knick-Knack Rando odds
-    ControlOffset+=20.0;
+    ControlOffset+=SETTINGS_OFFSET;
     knickknackRandoEdit = CreateNumInput("Knick-Knack Rando %: ", "100", 3, ControlLeft, ControlOffset);
 
+    //DONE button, well below the other settings
+    ControlOffset+=DONE_BUTTON_OFFSET;
+    doneButton = CreateDoneButton("DONE",(WinWidth-BUTTON_WIDTH)/2,ControlOffset);
+
+    DesiredHeight=ControlOffset;  //Tell the scroll client how tall this should be
 }
 //#endregion
 
 //#region Convenience
+function HGameButton CreateDoneButton(String text, int x, int y)
+{
+    local HGameButton newButt;
+
+    newButt = HGameButton(CreateControl(class'HGameButton', 
+                                                x, //X
+                                                y, //Y 
+                                                BUTTON_WIDTH, //Width
+                                                BUTTON_HEIGHT)); //Height
+    newButt.ShowWindow();
+    newButt.CancelAcceptsFocus();
+    newButt.Align = TA_Center;
+    newButt.SetText(text);
+
+    newButt.SetFont(4);
+    newButt.TextColor.R = 255;
+    newButt.TextColor.G = 255;
+    newButt.TextColor.B = 255;
+
+    newButt.UpTexture = class'ShortCutButton'.Default.UpButtonTexture;
+    newButt.DownTexture = class'ShortCutButton'.Default.DownButtonTexture;
+    newButt.OverTexture = class'ShortCutButton'.Default.UpButtonTexture;
+
+    //newButt.bUseRegion = True;
+    newButt.UpRegion.W = newButt.WinWidth;
+    newButt.UpRegion.H = newButt.WinHeight;
+
+    newButt.DownRegion.W = newButt.WinWidth;
+    newButt.DownRegion.H = newButt.WinHeight;
+
+    newButt.DisabledRegion.W = newButt.WinWidth;
+    newButt.DisabledRegion.H = newButt.WinHeight;
+
+    newButt.OverRegion.W = newButt.WinWidth;
+    newButt.OverRegion.H = newButt.WinHeight;
+
+    //newButt.Resized();
+
+    return newButt;
+}
+
 function UWindowEditControl CreateNumInput(String text, string startVal, int length, int x, int y)
 {
     local UWindowEditControl newWin;
     newWin = UWindowEditControl(CreateControl(class'UWindowEditControl', 
                                                 x, //X
                                                 y, //Y 
-                                                125, //Width
-                                                15)); //Height
+                                                OPTION_WIDTH, //Width
+                                                OPTION_HEIGHT)); //Height
     newWin.SetText(text);
     newWin.SetHelpText("asdfasdf");
     newWin.SetFont(F_Bold);
@@ -107,8 +175,8 @@ function ScalingComboBox CreateComboBox(string text, int x, int y)
     newWin = ScalingComboBox(CreateControl(class'ScalingComboBox', 
                                            x, //X
                                            y, //Y 
-                                           125, //Width
-                                           15)); //Height
+                                           OPTION_WIDTH, //Width
+                                           OPTION_HEIGHT)); //Height
     newWin.SetText(text);
     newWin.SetHelpText("asdfasdf");
     newWin.SetFont(F_Bold);
@@ -132,9 +200,15 @@ function SetComboBoxStartValue(ScalingComboBox comboBox, string value2)
 
 function Notify(UWindowDialogControl C, byte E)
 {
-    switch(c){
-        case seedEdit:
-            break;
+    switch(E)
+    {
+        case 2:
+            switch(c){
+                case doneButton:
+                    Close();
+                    break;
+            }
+        break;
     }
 }
 
@@ -146,7 +220,7 @@ function SaveAllSettings()
     local int i;
     local string s;
 
-    h = harry(Root.Console.Viewport.Actor);
+    h = harry(GetPlayerOwner());
 
     if (h==None){
         //Couldn't find Harry!
@@ -176,10 +250,12 @@ function Close (optional bool bByParent)
         bClosing = True;
         SaveAllSettings();
 
-        h = harry(Root.Console.Viewport.Actor);
+        h = harry(GetPlayerOwner());
         if (h.hp2r!=None){
             h.hp2r.RandoEnter();
         }
+
+        HPConsole(Root.Console).bLockMenus=False; //Allow opening the menu again
 
         Root.Console.CloseUWindow(); //This will also unpause the game
         Super.Close(bByParent);
