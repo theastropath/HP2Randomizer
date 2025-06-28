@@ -23,7 +23,7 @@ function FirstEntry()
 
     chance = GetGlobalFloat("HP2RSpawnerRando");
     l("swapping pool: Spawners, chance: "$chance);
-    SwapAllPooled(classes,chance,true); //Skip anything non-persistent
+    SwapAllPooled(classes,chance,true,false,true); //Skip anything non-persistent, swap tags
     l("done swapping pool: Spawners");
 }
 

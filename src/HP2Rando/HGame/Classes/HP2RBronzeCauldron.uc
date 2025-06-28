@@ -1,19 +1,22 @@
+//Fix the absurd collision size of these cauldrons.
 class HP2RBronzeCauldron injects bronzecauldron;
 
-//Fix the absurd collision size of these cauldrons.
-/*
-event PreBeginPlay()
+function Reset()
 {
-    local vector newLoc;
+    log("Attempting to reset cauldron "$Self$" in animation "$AnimSequence);
+    switch(AnimSequence){
+        case 'Fighter':
+        case 'sit':
+            return; //Cauldron hasn't been touched yet, just leave
+    }
 
-    Super.PreBeginPlay();
-
-    //Adjust their location since they were placed with no prepivot in mind
-    newLoc = Location - PrePivot;
-    SetLocation2(newLoc);
-    log(self$" location adjusted to "$Location);
+    log("Resetting cauldron "$Self);
+    bOpened=False; //Bronze cauldron doesn't *actually* modify bOpened, despite having the property
+    eVulnerableToSpell = Default.eVulnerableToSpell;
+    bProjTarget = Default.bProjTarget;
+    PlayAnim('sit');
+    GoToState('waitforspell');
 }
-*/
 
 defaultproperties
 {

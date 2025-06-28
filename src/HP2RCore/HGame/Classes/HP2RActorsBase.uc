@@ -84,7 +84,7 @@ function ClearClassesList(out class<Actor> classes[10])
 }
 
 //Swap all the items in a list of actor classes in a single pool
-function SwapAllPooled(class<Actor> classes[10], float percent_chance, optional bool skipNonPersistent, optional bool skipPersistent)
+function SwapAllPooled(class<Actor> classes[10], float percent_chance, optional bool skipNonPersistent, optional bool skipPersistent, optional bool swapTag, optional bool swapEvent)
 {
     local string seedStr;
     local Actor temp[4096];
@@ -124,13 +124,13 @@ function SwapAllPooled(class<Actor> classes[10], float percent_chance, optional 
         if( percent_chance<100 && !chance_single(percent_chance) ) continue;
         slot=rng(num-1);// -1 because we skip ourself
         if(slot >= i) slot++;
-        Swap(temp[i], temp[slot]);
+        Swap(temp[i], temp[slot], swapTag, swapEvent);
     }
 
 }
 
 
-function bool Swap(Actor a, Actor b)
+function bool Swap(Actor a, Actor b, optional bool swapTag, optional bool swapEvent)
 {
     local vector newloc, oldloc, aloc, bloc;
     local Vector HitLocation, HitNormal;
@@ -140,6 +140,7 @@ function bool Swap(Actor a, Actor b)
     local bool AbCollideActors, AbBlockActors, AbBlockPlayers;
     local bool BbCollideActors, BbBlockActors, BbBlockPlayers;
     local EPhysics aphysics, bphysics;
+    local name atag, btag, aevent,bevent;
 
     if( a == b ) return true;
 
@@ -218,6 +219,22 @@ function bool Swap(Actor a, Actor b)
     if(abase != bbase) a.SetBase(bbase);
     b.SetPhysics(aphysics);
     if(abase != bbase) b.SetBase(abase);
+
+    if (swapTag){
+        atag=a.Tag;
+        btag=b.Tag;
+        
+        a.Tag = btag;
+        b.Tag = atag;
+    }
+
+    if (swapEvent){
+        aevent=a.Event;
+        bevent=b.Event;
+        
+        a.Event = bevent;
+        b.Event = aevent;
+    }
 
     return true;
 }
