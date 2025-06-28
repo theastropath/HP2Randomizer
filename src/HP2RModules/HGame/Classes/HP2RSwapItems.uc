@@ -25,6 +25,24 @@ function FirstEntry()
     l("swapping pool: Spawners, chance: "$chance);
     SwapAllPooled(classes,chance,true,false,true); //Skip anything non-persistent, swap tags
     l("done swapping pool: Spawners");
+
+
+    ClearClassesList(classes);
+    i=0;
+    classes[i++]=class'HGame.WizardCardIcon'; //All Wizard Cards
+    classes[i++]=class'HGame.Jellybean'; // All loose jelly beans
+    classes[i++]=class'HGame.ChocolateFrog';
+    classes[i++]=class'HGame.JarFlobberwormMucus';
+    classes[i++]=class'HGame.JarWiggentreeBark';
+    classes[i++]=class'HGame.FlobberwormMucus';
+    classes[i++]=class'HGame.WiggentreeBark';
+
+    ClearSkipActorList();
+
+    chance = GetGlobalFloat("HP2RLooseItemRando");
+    l("swapping pool: Loose Items, chance: "$chance);
+    SwapAllPooled(classes,chance,true); //Skip anything non-persistent
+    l("done swapping pool: Loose Items");
 }
 
 function AnyEntry()

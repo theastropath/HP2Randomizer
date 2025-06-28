@@ -1,3 +1,4 @@
+//This is where we can set up new flags to config things like chances for rando
 class HP2RandoSetupWindow extends UWindowDialogClientWindow;
 
 var UWindowEditControl seedEdit;
@@ -5,6 +6,7 @@ var UWindowEditControl spellWandSpeedMinEdit;
 var UWindowEditControl spellWandSpeedMaxEdit;
 var ScalingComboBox    spellArrowDirModeEdit;
 var UWindowEditControl spawnerRandoEdit;
+var UWindowEditControl looseItemRandoEdit;
 var UWindowEditControl knickknackRandoEdit;
 
 var HGameButton doneButton;
@@ -78,6 +80,10 @@ function Created()
     //Spawner Rando odds
     ControlOffset+=SETTINGS_OFFSET;
     spawnerRandoEdit = CreateNumInput("Spawner Rando %: ", "100", 3, ControlLeft, ControlOffset);
+
+    //Loose Item Rando odds
+    ControlOffset+=SETTINGS_OFFSET;
+    looseItemRandoEdit = CreateNumInput("Loose Item Rando %: ", "100", 3, ControlLeft, ControlOffset);
 
     //Knick-Knack Rando odds
     ControlOffset+=SETTINGS_OFFSET;
@@ -237,6 +243,7 @@ function SaveAllSettings()
     h.SetGlobalFloat("HP2RSpellWandSpeedMax",GetPercentFloatVal(spellWandSpeedMaxEdit));
 
     h.SetGlobalString("HP2RSpawnerRando",spawnerRandoEdit.GetValue());
+    h.SetGlobalString("HP2RLooseItemRando",looseItemRandoEdit.GetValue());
     h.SetGlobalString("HP2RKnickKnackRando",knickknackRandoEdit.GetValue());
 }
 //#endregion
