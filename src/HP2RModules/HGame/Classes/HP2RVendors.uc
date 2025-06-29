@@ -148,6 +148,15 @@ function SwapVendorInfo(Characters a, Characters b)
     a.DuelLevelTrigger = b.DuelLevelTrigger;
     b.DuelLevelTrigger = tcl;
 
+    //Duel Vendors don't do luring, so make sure that gets traded as well
+    bo = a.bLuringEnabled;
+    a.bLuringEnabled = b.bLuringEnabled;
+    b.bLuringEnabled = bo;
+
+    i = a.nLureDistance;
+    a.nLureDistance = b.nLureDistance;
+    b.nLureDistance = i;
+
     //The duellists become "in GameState", but bHidden when your duel level is too low.
     //We'll keep them in the pool, but swap their bHidden'ness with them as their
     //Duel selling gets passed around.  This should keep the vendors from getting
