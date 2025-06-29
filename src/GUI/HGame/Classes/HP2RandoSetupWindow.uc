@@ -30,8 +30,6 @@ const DONE_BUTTON_OFFSET = 100.0;
 
 
 
-
-
 //#region Window Layout
 function Created()
 {
@@ -58,6 +56,9 @@ function Created()
     //New Section
     ControlOffset+=SETTINGS_OFFSET;
 
+    ControlOffset+=SETTINGS_OFFSET;
+    CreateTextLabel("Spell Lessons ",ControlLeft,ControlOffset);
+
     //Spell Lesson Arrow Rando Mode
     ControlOffset+=SETTINGS_OFFSET;
     spellArrowDirModeEdit = CreateComboBox("Spell Lesson Arrow Mode: ",ControlLeft,ControlOffset);
@@ -78,6 +79,9 @@ function Created()
     //New section
     ControlOffset+=SETTINGS_OFFSET;
 
+    ControlOffset+=SETTINGS_OFFSET;
+    CreateTextLabel("Item Swapping ",ControlLeft,ControlOffset);
+
     //Spawner Rando odds
     ControlOffset+=SETTINGS_OFFSET;
     spawnerRandoEdit = CreateNumInput("Spawner Rando %: ", "100", 3, ControlLeft, ControlOffset);
@@ -93,6 +97,9 @@ function Created()
     //New section
     ControlOffset+=SETTINGS_OFFSET;
 
+    ControlOffset+=SETTINGS_OFFSET;
+    CreateTextLabel("Vendors ",ControlLeft,ControlOffset);
+
     //Vendor Swap odds
     ControlOffset+=SETTINGS_OFFSET;
     vendorSwapEdit = CreateNumInput("Vendor Swap %: ", "100", 3, ControlLeft, ControlOffset);
@@ -106,13 +113,31 @@ function Created()
 //#endregion
 
 //#region Convenience
+function UWindowLabelControl CreateTextLabel(String text, int x, int y)
+{
+    local UWindowLabelControl newLabel;
+
+    newLabel = UWindowLabelControl(CreateControl(class'UWindowLabelControl', 
+                                                x, //X
+                                                y, //Y 
+                                                OPTION_WIDTH, //Width
+                                                OPTION_HEIGHT)); //Height
+    newLabel.SetText(text);
+    newLabel.SetFont(F_LargeBold);
+    newLabel.Align = TA_Center;
+    newLabel.TextColor=colWhite;
+
+    return newLabel;
+}
+
 function HGameButton CreateDoneButton(String text, int x, int y)
 {
     local HGameButton newButt;
 
+
     newButt = HGameButton(CreateControl(class'HGameButton', 
                                                 x, //X
-                                                y, //Y 
+                                                y * 1.1, //Y - TODO: Figure out why this multiplier is needed (related to texture size, maybe?)
                                                 BUTTON_WIDTH, //Width
                                                 BUTTON_HEIGHT)); //Height
     newButt.ShowWindow();
@@ -125,7 +150,7 @@ function HGameButton CreateDoneButton(String text, int x, int y)
     newButt.TextColor.G = 255;
     newButt.TextColor.B = 255;
 
-    newButt.UpTexture = class'ShortCutButton'.Default.UpButtonTexture;
+    newButt.UpTexture =   class'ShortCutButton'.Default.UpButtonTexture;
     newButt.DownTexture = class'ShortCutButton'.Default.DownButtonTexture;
     newButt.OverTexture = class'ShortCutButton'.Default.UpButtonTexture;
 
