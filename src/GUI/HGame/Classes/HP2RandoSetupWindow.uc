@@ -8,6 +8,7 @@ var ScalingComboBox    spellArrowDirModeEdit;
 var UWindowEditControl spawnerRandoEdit;
 var UWindowEditControl looseItemRandoEdit;
 var UWindowEditControl knickknackRandoEdit;
+var UWindowEditControl vendorSwapEdit;
 
 var HGameButton doneButton;
 
@@ -88,6 +89,13 @@ function Created()
     //Knick-Knack Rando odds
     ControlOffset+=SETTINGS_OFFSET;
     knickknackRandoEdit = CreateNumInput("Knick-Knack Rando %: ", "100", 3, ControlLeft, ControlOffset);
+
+    //New section
+    ControlOffset+=SETTINGS_OFFSET;
+
+    //Vendor Swap odds
+    ControlOffset+=SETTINGS_OFFSET;
+    vendorSwapEdit = CreateNumInput("Vendor Swap %: ", "100", 3, ControlLeft, ControlOffset);
 
     //DONE button, well below the other settings
     ControlOffset+=DONE_BUTTON_OFFSET;
@@ -245,6 +253,9 @@ function SaveAllSettings()
     h.SetGlobalString("HP2RSpawnerRando",spawnerRandoEdit.GetValue());
     h.SetGlobalString("HP2RLooseItemRando",looseItemRandoEdit.GetValue());
     h.SetGlobalString("HP2RKnickKnackRando",knickknackRandoEdit.GetValue());
+
+    h.SetGlobalString("HP2RVendorsSwap",vendorSwapEdit.GetValue());
+    
 }
 //#endregion
 

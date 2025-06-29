@@ -4,6 +4,7 @@ class HP2RFixups extends HP2RActorsBase transient;
 function PreFirstEntry()
 {
     local CauldronMixing cm;
+    local GenericSpawner gs;
 
     switch(hp2r.localURL){
         case "ENTRYHALL_HUB.UNR":
@@ -11,6 +12,15 @@ function PreFirstEntry()
             foreach AllActors(class'CauldronMixing',cm,'EnablePotionMix'){
                 cm.bIsSecretGoal=true;
                 break;
+            }
+
+            //Also make sure the Chest (actually a GenericSpawner) in the potions class
+            //stays there, so you will always have the bark and mucous required for the
+            //lesson.  I believe opening the chest is also required to proceed, so just
+            //having the ingredients isn't good enough.
+            foreach AllActors(class'GenericSpawner',gs){
+                if (gs.CutName!="Chest") continue;
+                gs.bIsSecretGoal=true;
             }
             break;
     }
@@ -42,6 +52,7 @@ function AnyEntry()
             ResetChallenge();
 
             //Make sure to move the chest (or whatever) back into place
+            //on the lowering platform
             foreach AllActors(class'Actor',a,'4CrabSecretChest'){break;}
             a.SetLocation(vect(512.8884,7.153972,178.3913));
             break;
