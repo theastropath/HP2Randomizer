@@ -1,5 +1,7 @@
 class HP2RSpellLessons extends HP2RActorsBase transient;
 
+const NO_ARROW = 4;
+
 //#region AnyEntry
 function AnyEntry()
 {
@@ -35,6 +37,42 @@ function RandomizeSpellLessonWandSpeed(float min, float max)
 //#endregion
 
 //#region Arrow Rando
+
+/*
+/////////////////INITIAL ARROW PATTERNS///////////////
+                 For Reference Purposes
+
+Rictusempra
+=============
+-LLUURL-LLUURL-LLUURL-LLUURL---
+LLUURL  LLUURL  LLUURL  LLUURL
+31 SLIP's
+
+
+Skurge
+=======
+--L-R-LRU-U--L-RLRUU---L-RL-R-U-U--L-R-L-R-U-U---
+LRLRUU   LRLRUU  LRLRUU  LRLRUU
+49 SLIP's
+
+
+Diffindo
+=========
+--U-DU-U-RR--UD-UU-RR-U-DU-U-R-R-
+UDUURR  UDUURR  UDUURR
+33 SLIP's
+
+
+Spongify
+=========
+---U-R-R-U-D-D-R----U-R-R-U-D-D-R----U-R-R-U-D-D-R-----
+URRUDDR   URRUDDR   URRUDDR
+55 SLIP's
+
+//////////////////////////////////////////////////////
+*/
+
+
 //Randomize all spell lessons with the same method (is this actually how it should be?)
 function RandomizeSpellLessonArrows()
 {
@@ -154,6 +192,64 @@ function ExistingArrowsConsistentRando()
 
 }
 
+function DumpSLIPArrows(SpellLessonInterpolationPoint start, SpellLessonInterpolationPoint end)
+{
+    local SpellLessonInterpolationPoint slipStart, slipEnd, slip;
+    local string pattern[3];
+    local int i;
+
+    pattern[0]="";
+    pattern[1]="";
+    pattern[2]="";
+
+    for(slip=start;
+        slip!=end && slip!=None;
+        slip=SpellLessonInterpolationPoint(slip.Next))
+    {
+        for(i=0;i<ArrayCount(pattern);i++){
+            switch(slip.DirectionArrow[i]){
+                case Arrow_Up:
+                    pattern[i] = pattern[i]$"U";
+                    break;
+                case Arrow_Down:
+                    pattern[i] = pattern[i]$"D";
+                    break;
+                case Arrow_Left:
+                    pattern[i] = pattern[i]$"L";
+                    break;
+                case Arrow_Right:
+                    pattern[i] = pattern[i]$"R";
+                    break;
+                case Arrow_None:
+                    pattern[i] = pattern[i]$"-";
+                    break;
+                default:
+                    pattern[i] = pattern[i]$" ?";
+                    break;
+            }
+        }
+    }
+
+    for(i=0;i<ArrayCount(pattern);i++){
+        l("Pattern["$i$"] = "$pattern[i]);
+    }
+
+}
+
+function int GetPatternLengthFromSpellShape(SpellLessonTrigger.ELessonShape shape)
+{
+    switch(shape){
+        case LessonShape_Rictusempra:
+        case LessonShape_Skurge:
+        case LessonShape_Diffindo:
+            return 6;
+        case LessonShape_Spongify:
+            return 7; //Annoying
+    }
+    err("Unknown Spell Lesson shape! "$shape);
+    return 6; //Just assume it's similar to most others?
+}
+
 //Pure randomization of the existing pattern, then repeat that pattern, like in vanilla
 //Pattern carries through each round
 function ExistingArrowsChaosPatternRando()
@@ -161,9 +257,8 @@ function ExistingArrowsChaosPatternRando()
     local SpellLessonInterpolationPoint slipStart, slipEnd, slip;
     local SpellLessonTrigger slt;
     local int ArrowPattern[10];
-    local bool patternStarted;
     local string pattern;
-    local int i;
+    local int i, patternLength, pattProg;
 
     foreach AllActors(class'SpellLessonTrigger',slt)
     {
@@ -178,29 +273,29 @@ function ExistingArrowsChaosPatternRando()
             l("Couldn't find end point!");
             continue;
         }
+        
+        l("Before rando: ");
+        DumpSLIPArrows(slipStart,slipEnd);
 
+        patternLength = GetPatternLengthFromSpellShape(slt.LessonShape);
         //initialize the pattern array
         for(i=0;i<ArrayCount(ArrowPattern);i++){
-            ArrowPattern[i]=4; //Arrow_None = 4
+            ArrowPattern[i]=NO_ARROW;
         }
 
         //Figure out the pattern based on difficulty 3
-        i=0;
-        patternStarted = false;
+        pattProg=0;
         for(slip=slipStart;
             slip!=slipEnd && slip!=None;
             slip=SpellLessonInterpolationPoint(slip.Next))
         {
             //l("SLIP "$slip.Position$" Arrow direction "$slip.DirectionArrow[2].EnumName(slip.DirectionArrow[2]));
             if (slip.DirectionArrow[2]==Arrow_None){
-                if (patternStarted){
-                    break; //We've hit the end of the pattern, break out of here
-                } else {
-                    continue; //Keep going until we find the start of the pattern
-                }
+                continue; //Skip it
             }
-            patternStarted = true;
-            ArrowPattern[i++] = slip.DirectionArrow[2];
+            ArrowPattern[pattProg++] = slip.DirectionArrow[2];
+
+            if (pattProg==patternLength) break;
         }
 
         //Log the initial pattern
@@ -227,13 +322,13 @@ function ExistingArrowsChaosPatternRando()
         l(pattern);
 
         //Randomize the arrows in the pattern...
-        for(i=0;i<ArrayCount(ArrowPattern) && ArrowPattern[i]!=4;i++){ // 4 = Arrow_None
+        for(i=0;i<ArrayCount(ArrowPattern) && ArrowPattern[i]!=NO_ARROW;i++){
             ArrowPattern[i]=rng(4); //Any direction, just not NONE
         }
 
         //Log the randomized pattern
         pattern = "Randomized "$slt.LessonShape.EnumName(slt.LessonShape)$" Pattern: ";
-        for(i=0;i<ArrayCount(ArrowPattern) && ArrowPattern[i]!=4;i++){
+        for(i=0;i<ArrayCount(ArrowPattern) && ArrowPattern[i]!=NO_ARROW;i++){
             switch(ArrowPattern[i]){
                 case 0:
                     pattern = pattern$" Up";
@@ -256,29 +351,27 @@ function ExistingArrowsChaosPatternRando()
 
         //Copy the new random pattern into the SLIPs
         i=0;
-        patternStarted=false;
+        pattProg=0;
         for(slip=slipStart;
             slip!=slipEnd && slip!=None;
             slip=SpellLessonInterpolationPoint(slip.Next))
         {
-            if (slip.DirectionArrow[2]==Arrow_None){
-                if (patternStarted){
-                    i=0;
-                    patternStarted=false;
-                    continue; //We've hit the end of the pattern, reset and keep going
-                } else {
-                    continue; //Keep going until we find the start of the pattern
-                }
-            }
-            patternStarted = true;
+            if (slip.DirectionArrow[2]==Arrow_None) continue;
 
-            slip.DirectionArrow[2] = EDirectionArrow(ArrowPattern[i++]);
+            slip.DirectionArrow[2] = EDirectionArrow(ArrowPattern[pattProg++]);
             //l("SLIP "$slip.Position$" New Arrow direction "$slip.DirectionArrow[2].EnumName(slip.DirectionArrow[2]));
 
             //Copy the pattern down to the easier levels
             if (slip.DirectionArrow[0] != Arrow_None) slip.DirectionArrow[0] = slip.DirectionArrow[2];
             if (slip.DirectionArrow[1] != Arrow_None) slip.DirectionArrow[1] = slip.DirectionArrow[2];
+
+            if (pattProg>=patternLength) pattProg=0; //Loop back to the start of the pattern
         }
+
+        l("After rando: ");
+        DumpSLIPArrows(slipStart,slipEnd);
+        l(" ");
+
     }
 }
 
