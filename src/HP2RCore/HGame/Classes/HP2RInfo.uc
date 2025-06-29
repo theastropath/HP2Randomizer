@@ -76,6 +76,13 @@ static function string ActorToString( Actor a )
     return out;
 }
 
+function InitRandoFlag(string key, string val)
+{
+    if (GetGlobalString(key)==""){
+        SetGlobalString(key,val);
+    }
+}
+
 static function int Ceil(float f)
 {
     local int ret;

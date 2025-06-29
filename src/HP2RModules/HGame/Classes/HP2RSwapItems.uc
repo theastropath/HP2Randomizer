@@ -2,6 +2,13 @@ class HP2RSwapItems extends HP2RActorsBase transient;
 
 //Not going to bother with config in this HP2 version - no one ever touched it in DXRando
 
+function CheckConfig()
+{
+    InitRandoFlag("HP2RSpawnerRando","100");
+    InitRandoFlag("HP2RLooseItemRando","100");
+    InitRandoFlag("HP2RKnickKnackRando","100");
+}
+
 function FirstEntry()
 {
     local int i;

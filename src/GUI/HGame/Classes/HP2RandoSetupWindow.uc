@@ -9,6 +9,10 @@ var UWindowEditControl spawnerRandoEdit;
 var UWindowEditControl looseItemRandoEdit;
 var UWindowEditControl knickknackRandoEdit;
 var UWindowEditControl vendorSwapEdit;
+var UWindowEditControl vendorPriceMinEdit;
+var UWindowEditControl vendorPriceMaxEdit;
+var UWindowEditControl duelPrizeMinEdit;
+var UWindowEditControl duelPrizeMaxEdit;
 
 var HGameButton doneButton;
 
@@ -27,6 +31,7 @@ const OPTION_HEIGHT=15;
 const SETTINGS_START = 5.0;
 const SETTINGS_OFFSET= 20.0;
 const DONE_BUTTON_OFFSET = 100.0;
+const MINOR_SEPARATION_OFFSET = 10; //For adding slight extra space to separate min/max related options from others
 
 
 
@@ -69,6 +74,8 @@ function Created()
     spellArrowDirModeEdit.AddItem("Chaos Pattern","PatternChaos");
     SetComboBoxStartValue(spellArrowDirModeEdit,"PatternChaos"); //Default to Chaos Pattern
 
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
     //Minimum 
     ControlOffset+=SETTINGS_OFFSET;
     spellWandSpeedMinEdit = CreateNumInput("Spell Lesson Wand Speed Min %: ", "75", 3, ControlLeft, ControlOffset);
@@ -104,6 +111,22 @@ function Created()
     ControlOffset+=SETTINGS_OFFSET;
     vendorSwapEdit = CreateNumInput("Vendor Swap %: ", "100", 3, ControlLeft, ControlOffset);
 
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    vendorPriceMinEdit = CreateNumInput("Vendor Price Min %: ", "50", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    vendorPriceMaxEdit = CreateNumInput("Vendor Price Max %: ", "150", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    duelPrizeMinEdit = CreateNumInput("Duel Prize Min %: ", "50", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    duelPrizeMaxEdit = CreateNumInput("Duel Prize Max %: ", "200", 3, ControlLeft, ControlOffset);
+
     //DONE button, well below the other settings
     ControlOffset+=DONE_BUTTON_OFFSET;
     doneButton = CreateDoneButton("DONE",(WinWidth-BUTTON_WIDTH)/2,ControlOffset);
@@ -137,7 +160,7 @@ function HGameButton CreateDoneButton(String text, int x, int y)
 
     newButt = HGameButton(CreateControl(class'HGameButton', 
                                                 x, //X
-                                                y * 1.1, //Y - TODO: Figure out why this multiplier is needed (related to texture size, maybe?)
+                                                y * 1.2, //Y - TODO: Figure out why this multiplier is needed (related to texture size, maybe?)
                                                 BUTTON_WIDTH, //Width
                                                 BUTTON_HEIGHT)); //Height
     newButt.ShowWindow();
@@ -280,7 +303,11 @@ function SaveAllSettings()
     h.SetGlobalString("HP2RKnickKnackRando",knickknackRandoEdit.GetValue());
 
     h.SetGlobalString("HP2RVendorsSwap",vendorSwapEdit.GetValue());
-    
+    h.SetGlobalFloat("HP2RVendorPriceMin",GetPercentFloatVal(vendorPriceMinEdit));
+    h.SetGlobalFloat("HP2RVendorPriceMax",GetPercentFloatVal(vendorPriceMaxEdit));
+    h.SetGlobalFloat("HP2RDuelPrizeMin",GetPercentFloatVal(duelPrizeMinEdit));
+    h.SetGlobalFloat("HP2RDuelPrizeMax",GetPercentFloatVal(duelPrizeMaxEdit));
+
 }
 //#endregion
 

@@ -1,10 +1,76 @@
 class HP2RVendors extends HP2RActorsBase transient;
 //I HAVE FLOBBERWORM MUCUS
 
+function CheckConfig()
+{
+    InitRandoFlag("HP2RVendorsSwap","100");
+    InitRandoFlag("HP2RVendorPriceMin","0.5");
+    InitRandoFlag("HP2RVendorPriceMax","1.5");
+    InitRandoFlag("HP2RDuelPrizeMin","0.5");
+    InitRandoFlag("HP2RDuelPrizeMax","2.0");
+}
+
+
 function PostAnyEntry()
 {
     ShuffleVendorItems();
-    //Randomize vendor prices?
+    RandomizePrices();
+}
+
+function bool IsValidVendor(Characters c)
+{
+    if (c.CharacterSells==Sells_Nothing) return false; //Only vendors
+    if (c.bInCurrentGameState==False)   return false; //Only do the vendors who are currently present
+    if (c.bPersistent==True)            return false; //Only do non-persistent characters
+
+    return true;
+}
+
+//Mostly to consistently ensure the price doesn't end up as zero
+function int MultPrice(int price, float mult)
+{
+    local int endPrice;
+
+    endPrice = price * mult;
+
+    if (endPrice <= 0){
+        endPrice = 1;
+    }
+
+    return endPrice;
+}
+
+function RandomizePrices()
+{
+    local float priceMin, priceMax, duelMin, duelMax; //Settings
+    local float priceMult, duelMult;
+    local Characters c;
+
+    priceMin = GetGlobalFloat("HP2RVendorPriceMin");
+    priceMax = GetGlobalFloat("HP2RVendorPriceMax");
+    duelMin  = GetGlobalFloat("HP2RDuelPrizeMin");
+    duelMax  = GetGlobalFloat("HP2RDuelPrizeMax");
+
+    foreach AllActors(class'Characters',c){
+        if (!IsValidVendor(c)) continue;
+
+        priceMult = rngrange(1,priceMin,priceMax);
+        duelMult  = rngrange(1,duelMin,duelMax);
+
+        //Normal selling things
+        c.nPriceNimbus2001     = MultPrice(c.nPriceNimbus2001,priceMult);
+        c.nPriceQArmor         = MultPrice(c.nPriceQArmor,priceMult);
+        c.nPriceWBark          = MultPrice(c.nPriceWBark,priceMult);
+        c.nPriceFMucus         = MultPrice(c.nPriceFMucus,priceMult);
+        c.nPriceBronzeCardsMin = MultPrice(c.nPriceBronzeCardsMin,priceMult);
+        c.nPriceBronzeCardsMax = MultPrice(c.nPriceBronzeCardsMax,priceMult);
+        c.nPriceSilverCardsMin = MultPrice(c.nPriceSilverCardsMin,priceMult);
+        c.nPriceSilverCardsMax = MultPrice(c.nPriceSilverCardsMax,priceMult);
+
+        //Duel prize
+        c.DuelBeans = MultPrice(c.DuelBeans,duelMult);
+    }
+
 }
 
 function ShuffleVendorItems()
@@ -21,9 +87,7 @@ function ShuffleVendorItems()
 
     numVendors=0;
     foreach AllActors(class'Characters',chara){
-        if (chara.CharacterSells==Sells_Nothing) continue; //Shuffle only vendors
-        if (chara.bInCurrentGameState==False) continue; //Only shuffle the vendors who are currently present
-        if (chara.bPersistent==True) continue; //Only do non-persistent characters
+        if (!IsValidVendor(chara)) continue;
         vendors[numVendors] = chara;
 
         if (chara.VendorDialogSet!=VDialog_DuelVendor) {

@@ -2,6 +2,13 @@ class HP2RSpellLessons extends HP2RActorsBase transient;
 
 const NO_ARROW = 4;
 
+function CheckConfig()
+{
+    InitRandoFlag("HP2RSpellArrowDirMode","PatternChaos");
+    InitRandoFlag("HP2RSpellWandSpeedMin","0.75");
+    InitRandoFlag("HP2RSpellWandSpeedMax","1.50");
+}
+
 //#region AnyEntry
 function AnyEntry()
 {
