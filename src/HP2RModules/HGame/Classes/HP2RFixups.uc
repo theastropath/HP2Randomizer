@@ -7,7 +7,10 @@ function PreFirstEntry()
     local GenericSpawner gs;
 
     switch(hp2r.localURL){
-        case "ENTRYHALL_HUB.UNR":
+        case "ADV1WILLOW":
+            WillowPreFirstFixup();
+            break;
+        case "ENTRYHALL_HUB":
             //Make sure the mixing cauldron in the potions class stays put
             foreach AllActors(class'CauldronMixing',cm,'EnablePotionMix'){
                 cm.bIsSecretGoal=true;
@@ -34,21 +37,21 @@ function AnyEntry()
     local Mover m;
 
     switch(hp2r.localURL){
-        case "ENTRYHALL_HUB.UNR":
+        case "ENTRYHALL_HUB":
             //Reset the Gryffindor common room chest?  Normally non-persistent.
             break;
-        case "TRANSITION.UNR":
+        case "TRANSITION":
             ReplaceTransitionDragonStatues();
             break;
-        case "BEANREWARDROOM.UNR":
-        case "CH2SKURGE.UNR":
-        case "CH3DIFFINDO.UNR":
-        case "CH4SPONGIFY.UNR":
-        case "CH6WIZARDCARD.UNR":
-        case "CH7GRYFFINDOR.UNR":
+        case "BEANREWARDROOM":
+        case "CH2SKURGE":
+        case "CH3DIFFINDO":
+        case "CH4SPONGIFY":
+        case "CH6WIZARDCARD":
+        case "CH7GRYFFINDOR":
             ResetChallenge();
             break;
-        case "CH1RICTUSEMPRA.UNR":
+        case "CH1RICTUSEMPRA":
             ResetChallenge();
 
             //Make sure to move the chest (or whatever) back into place
@@ -86,6 +89,17 @@ function ResetAllChests()
     }
 }
 
+
+function WillowPreFirstFixup()
+{
+    local Actor a;
+    
+    //There's a duplicate of the willow and surrounding area (including chests and beans) used for
+    //the intro cutscene.  Exclude those actors from any randomization.
+    foreach RadiusActors(class'Actor',a,4000,vect(11545,-2,-255)){
+        a.bIsSecretGoal=true;
+    }
+}
 
 
 function ReplaceTransitionDragonStatues()

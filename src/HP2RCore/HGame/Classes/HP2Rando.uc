@@ -23,7 +23,8 @@ var HP2Rando hp2r;
 
 function InitRando()
 {
-    localURL = Caps(Level.LevelEnterText); //LevelEnterText is the actual map file name
+    localURL = Caps(Level.LevelEnterText); //LevelEnterText is the actual map file name (Which usually includes .unr at the end)
+    localURL = ReplaceText(localURL,".UNR",""); //Strip the .UNR off (because there's at least one case where the URL comes through without it)
     log("InitRando: LocalURL is "$localURL);
 
     hp2r = self;
@@ -50,7 +51,7 @@ function PlayerReady()
     playerIsReady=true;
     l("PlayerReady in "$localURL);
 
-    if (localURL=="PRIVETDR.UNR"){
+    if (localURL=="PRIVETDR"){
         Player.ClientMessage("Loading Rando Setup Window!");
         HP2RandoSetupWindow(); //The setup window will call RandoEnter once it's closed
     } else {
