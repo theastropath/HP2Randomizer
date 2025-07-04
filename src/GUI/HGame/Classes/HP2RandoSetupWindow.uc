@@ -13,6 +13,7 @@ var UWindowEditControl vendorPriceMinEdit;
 var UWindowEditControl vendorPriceMaxEdit;
 var UWindowEditControl duelPrizeMinEdit;
 var UWindowEditControl duelPrizeMaxEdit;
+var UWindowCheckbox    vendorExtraLocsEdit;
 
 var HGameButton doneButton;
 
@@ -111,6 +112,9 @@ function Created()
     ControlOffset+=SETTINGS_OFFSET;
     vendorSwapEdit = CreateNumInput("Vendor Swap %: ", "100", 3, ControlLeft, ControlOffset);
 
+    ControlOffset+=SETTINGS_OFFSET;
+    vendorExtraLocsEdit = CreateCheckbox("Additional Vendor Locations: ", true, ControlLeft, ControlOffset);
+
     ControlOffset+=MINOR_SEPARATION_OFFSET;
 
     ControlOffset+=SETTINGS_OFFSET;
@@ -193,6 +197,24 @@ function HGameButton CreateDoneButton(String text, int x, int y)
     //newButt.Resized();
 
     return newButt;
+}
+
+function UWindowCheckbox CreateCheckbox(String text, bool startChecked, int x, int y)
+{
+    local UWindowCheckbox newCheck;
+    newCheck = UWindowCheckbox(CreateControl(class'UWindowCheckbox', 
+                                           x, //X
+                                           y, //Y 
+                                           OPTION_WIDTH, //Width
+                                           OPTION_HEIGHT)); //Height
+    newCheck.SetText(text);
+    newCheck.SetHelpText("asdfasdf");
+    newCheck.SetFont(F_Bold);
+    newCheck.Align = TA_Left;
+    newCheck.bChecked = startChecked;
+    newCheck.TextColor=colWhite;
+
+    return newCheck;
 }
 
 function UWindowEditControl CreateNumInput(String text, string startVal, int length, int x, int y)
@@ -303,6 +325,7 @@ function SaveAllSettings()
     h.SetGlobalString("HP2RKnickKnackRando",knickknackRandoEdit.GetValue());
 
     h.SetGlobalString("HP2RVendorsSwap",vendorSwapEdit.GetValue());
+    h.SetGlobalBool("HP2RVendorExtraLocs",vendorExtraLocsEdit.bChecked);  //Bool saves as 1/0, not True/False
     h.SetGlobalFloat("HP2RVendorPriceMin",GetPercentFloatVal(vendorPriceMinEdit));
     h.SetGlobalFloat("HP2RVendorPriceMax",GetPercentFloatVal(vendorPriceMaxEdit));
     h.SetGlobalFloat("HP2RDuelPrizeMin",GetPercentFloatVal(duelPrizeMinEdit));

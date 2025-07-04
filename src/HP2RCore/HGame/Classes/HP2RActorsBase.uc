@@ -141,10 +141,14 @@ function bool Swap(Actor a, Actor b, optional bool swapTag, optional bool swapEv
     local bool BbCollideActors, BbBlockActors, BbBlockPlayers;
     local EPhysics aphysics, bphysics;
     local name atag, btag, aevent,bevent;
+    local Characters cA, cB;
 
     if( a == b ) return true;
 
     l("swapping "$ActorToString(a)$" and "$ActorToString(b)$" distance == " $ VSize(a.Location - b.Location) );
+
+    cA = Characters(a);
+    cB = Characters(b);
 
     AbCollideActors = a.bCollideActors;
     AbBlockActors = a.bBlockActors;
@@ -209,6 +213,15 @@ function bool Swap(Actor a, Actor b, optional bool swapTag, optional bool swapEv
     b.SetRotation(a.Rotation);
     a.DesiredRotation = newrot;
     a.SetRotation(newrot);
+
+    //Characters set rSave in PostBeginPlay.  After finishing a vendor conversation,
+    //they return to rotation rSave.  Update rSave to match their new rotation.
+    if (cA!=None){
+        cA.rSave = cA.Rotation;
+    }
+    if (cB!=None){
+        cB.rSave = cB.Rotation;
+    }
 
     aphysics = a.Physics;
     bphysics = b.Physics;

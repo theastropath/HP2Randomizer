@@ -8,6 +8,7 @@ function CheckConfig()
     InitRandoFlag("HP2RVendorPriceMax","1.5");
     InitRandoFlag("HP2RDuelPrizeMin","0.5");
     InitRandoFlag("HP2RDuelPrizeMax","2.0");
+    InitRandoFlag("HP2RVendorExtraLocs","1");
 }
 
 
@@ -19,9 +20,10 @@ function PostAnyEntry()
 
 function bool IsValidVendor(Characters c)
 {
+    if (PlaceholderVendor(c)!=None)      return true; //Placeholder Vendor is always valid
     if (c.CharacterSells==Sells_Nothing) return false; //Only vendors
-    if (c.bInCurrentGameState==False)   return false; //Only do the vendors who are currently present
-    if (c.bPersistent==True)            return false; //Only do non-persistent characters
+    if (c.bInCurrentGameState==False)    return false; //Only do the vendors who are currently present
+    if (c.bPersistent==True)             return false; //Only do non-persistent characters
 
     return true;
 }
@@ -73,6 +75,54 @@ function RandomizePrices()
 
 }
 
+function CreateVendorPlaceholders()
+{
+    if (GetGlobalBool("HP2RVendorExtraLocs")==False) return;
+
+    switch(hp2r.localURL){
+        case "ENTRYHALL_HUB":
+            Spawn(class'PlaceholderVendor',,, vect(580,-555,-275), rot(0,-16384,0));     //Window across from Duel Vendors
+            Spawn(class'PlaceholderVendor',,, vect(-1100,-700,-275), rot(0,-8000,0));    //Corner near front door
+            Spawn(class'PlaceholderVendor',,, vect(880,-1780,-20), rot(0,-22000,0));     //Stairwell near Gryffindor Common Room
+            Spawn(class'PlaceholderVendor',,, vect(700,-2920,107), rot(0,16384,0));      //Near Skurge door
+            Spawn(class'PlaceholderVendor',,, vect(-600,-2630,235), rot(0,-20000,0));    //Near Grand Staircase door
+            Spawn(class'PlaceholderVendor',,, vect(140,-1515,-20), rot(0,22000,0));      //Near Rictusempra door
+            Spawn(class'PlaceholderVendor',,, vect(530,-2460,110), rot(0,40000,0));      //Staircase outside Gryff common room stairs
+            Spawn(class'PlaceholderVendor',,, vect(-245,-2927,237), rot(0,16384,0));     //Hallway near grand staircase door
+            Spawn(class'PlaceholderVendor',,, vect(-2440,-1160,-465), rot(0,0,0));       //Bottom of stairs to dungeon
+            Spawn(class'PlaceholderVendor',,, vect(-4190,-1785,-465), rot(0,8000,0));    //Main dungeon hall
+            Spawn(class'PlaceholderVendor',,, vect(-2515,-1975,-595), rot(0,-16384,0));  //Opposite Slytherin common room door
+            Spawn(class'PlaceholderVendor',,, vect(1460,-385,-275), rot(0,-16384,0));    //Great Hall
+            Spawn(class'PlaceholderVendor',,, vect(2725,-1300,-275), rot(0,16384,0));    //Great Hall
+            break;
+        case "GRANDSTAIRCASE_HUB":
+            Spawn(class'PlaceholderVendor',,, vect(-320,-5890,430), rot(0,22000,0));     //Bottom floor, near staircase
+            Spawn(class'PlaceholderVendor',,, vect(-2072,-5255,945), rot(0,-16384,0));   //Near Wizard Card Challenge Room door
+            Spawn(class'PlaceholderVendor',,, vect(-128,-6895,1200), rot(0,16384,0));    //Fourth floor hallway
+            Spawn(class'PlaceholderVendor',,, vect(-2145,-6375,1455), rot(0,-16384,0));  //Fifth floor, near Headmaster entrance
+            Spawn(class'PlaceholderVendor',,, vect(185,-4655,1710), rot(0,0,0));         //Infirmary
+            Spawn(class'PlaceholderVendor',,, vect(-125,-2435,1340), rot(0,-16384,0));   //Infirmary office
+            break;
+        case "GROUNDS_HUB":
+            Spawn(class'PlaceholderVendor',,, vect(1500,-2250,175), rot(0,22000,0));   //Upper level near castle wall
+            Spawn(class'PlaceholderVendor',,, vect(-590,-585,-115), rot(0,-22000,0));   //Lower hill near Diffindo door
+            Spawn(class'PlaceholderVendor',,, vect(-90,0,80), rot(0,32768,0));   //Next to dragon statue
+            Spawn(class'PlaceholderVendor',,, vect(250,-720,45), rot(0,32768,0));   //Between main doors and dragon statue
+            Spawn(class'PlaceholderVendor',,, vect(-2480,-220,45), rot(0,0,0));   //Near Greenhouse
+            Spawn(class'PlaceholderVendor',,, vect(2345,3140,-190), rot(0,-16384,0));   //Hagrid's Hut
+            break;
+    }
+}
+
+function RemoveVendorPlaceholders()
+{
+    local PlaceholderVendor pv;
+
+    foreach AllActors(class'PlaceholderVendor',pv){
+        pv.Destroy();
+    }
+}
+
 function ShuffleVendorItems()
 {
     local float chance;
@@ -84,6 +134,8 @@ function ShuffleVendorItems()
     chance = GetGlobalFloat("HP2RVendorsSwap");
 
     if (chance<=0.0) return;
+
+    CreateVendorPlaceholders();
 
     numVendors=0;
     foreach AllActors(class'Characters',chara){
@@ -125,6 +177,8 @@ function ShuffleVendorItems()
 
         vendors[i].VendorInit(); //Make sure the dialog is set up right for everyone
     }
+
+    RemoveVendorPlaceholders();
 }
 
 //Yoinked logic (but tightened up) from Duellist::DuellistSex()
@@ -146,7 +200,21 @@ function SwapVendorInfo(Characters a, Characters b)
     local Characters.EVendorDialog dia;
     local int i;
     local TriggerChangeLevel tcl;
+    local PlaceholderVendor pvA, pvB;
     local bool bo, blockPlayers, colActors, blockActors;
+
+    pvA=PlaceholderVendor(a);
+    pvB=PlaceholderVendor(b);
+
+    if (pvA!=None && pvB!=None){
+        //both are placeholders, just leave them where they are
+        return;
+    } else if ((pvA!=None && pvB==None) || (pvA==None && pvB!=None)){
+        //One is a placeholder, physically swap them
+        Swap(a,b);
+        return;
+    }
+    //Neither is a placeholder, swap their properties
 
     val = a.CharacterSells;
     a.CharacterSells = b.CharacterSells;
