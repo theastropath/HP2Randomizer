@@ -84,6 +84,24 @@ function HP2RMapRandoInfo GetMapRandoInfo()
     return mapRando;
 }
 
+function bool HasReEntryAlreadyRun()
+{
+    local HP2RMapReEntryMarker m;
+
+    foreach AllActors(class'HP2RMapReEntryMarker',m){break;}
+
+    return m!=None;
+}
+
+function HP2RMapReEntryMarker MarkReEntryAsRun()
+{
+    local HP2RMapReEntryMarker m;
+
+    m = Spawn(class'HP2RMapReEntryMarker');
+
+    return m;
+}
+
 function RollSeed()
 {
     local string seedInput;
@@ -141,7 +159,21 @@ function RandoEnter()
     }
 
     //ReEntry is tricky, because non-bPersistent objects will be reset to their original state (at least,
-    //in a future version of the engine?).
+    //in a future version of the engine?).  In addition, currently non-bPersistent objects are SAVED in
+    //save games, but are reset on re-entry.
+    //We can spawn a bPersistent=False object after ReEntry, which will tell us if ReEntry has already
+    //run in this instance (ie. it ran before saving), and we can quit early in that case (basically only
+    //being a thing that should happen when you load a save.)
+
+    if (!firstTime && HasReEntryAlreadyRun()){
+        //look for non-persistent thing.  Return early if present, and disable tick.
+        l("Non-Persistent object HP2RMapReEntryMarker still exists!  Don't need to run any randomization!");
+        Player.ClientMessage("HP2RMapReEntryMarker already exists!");
+        Disable('Tick');
+        bTickEnabled=false;
+
+        return;
+    }
 
     //Each module will need to determine whether the objects it modifies are bPersistent or not (or a mix)
     //and figure out how frequently it needs to re-randomize
@@ -160,6 +192,7 @@ function RandoEnter()
         runPostFirstEntry = true;
         info("done randomizing "$localURL$" using seed " $ seed);
     } else {
+
         for(i=0; i<num_modules; i++) {
             modules[i].ReEntry(true);
         }
@@ -169,6 +202,8 @@ function RandoEnter()
     for(i=0; i<num_modules; i++) {
         modules[i].AnyEntry();
     }
+
+    MarkReEntryAsRun();
 }
 
 simulated function PreTravel()

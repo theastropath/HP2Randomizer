@@ -1,0 +1,9 @@
+class HP2RCauldronTeacher injects CauldronTeacher;
+
+defaultproperties
+{
+    bAlignBottomAlways=True //Force the mesh to be aligned to the bottom of the collision
+    CollisionHeight=15  //Vanilla is basically double height and double radius, unnecessarily
+    CollisionRadius=18
+    Physics=PHYS_Falling //Vanilla default is PHYS_None
+}
