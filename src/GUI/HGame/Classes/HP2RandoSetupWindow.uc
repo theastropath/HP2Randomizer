@@ -2,18 +2,25 @@
 class HP2RandoSetupWindow extends UWindowDialogClientWindow;
 
 var UWindowEditControl seedEdit;
-var UWindowEditControl spellWandSpeedMinEdit;
-var UWindowEditControl spellWandSpeedMaxEdit;
+var UWindowEditControl spellWandSpeedMinEdit, spellWandSpeedMaxEdit;
 var ScalingComboBox    spellArrowDirModeEdit;
 var UWindowEditControl spawnerRandoEdit;
 var UWindowEditControl looseItemRandoEdit;
 var UWindowEditControl knickknackRandoEdit;
 var UWindowEditControl vendorSwapEdit;
-var UWindowEditControl vendorPriceMinEdit;
-var UWindowEditControl vendorPriceMaxEdit;
-var UWindowEditControl duelPrizeMinEdit;
-var UWindowEditControl duelPrizeMaxEdit;
+var UWindowEditControl vendorPriceMinEdit, vendorPriceMaxEdit;
+var UWindowEditControl duelPrizeMinEdit, duelPrizeMaxEdit;
 var UWindowCheckbox    vendorExtraLocsEdit;
+
+var UWindowEditControl QuidBludgerDmgMinEdit, QuidBludgerDmgMaxEdit;
+var UWindowEditControl QuidBludgerSpeedMinEdit, QuidBludgerSpeedMaxEdit;
+var UWindowEditControl QuidBludgerRangeMinEdit, QuidBludgerRangeMaxEdit;
+var UWindowEditControl QuidBludgerPursueTimeMinEdit, QuidBludgerPursueTimeMaxEdit;
+var UWindowEditControl QuidSeekerRecoveryMinEdit, QuidSeekerRecoveryMaxEdit;
+var UWindowEditControl QuidSeekerPenaltyMinEdit, QuidSeekerPenaltyMaxEdit;
+var UWindowEditControl QuidSeekerKickItvlMinEdit, QuidSeekerKickItvlMaxEdit;
+var UWindowEditControl QuidSeekerDmgMinEdit, QuidSeekerDmgMaxEdit;
+
 
 var HGameButton doneButton;
 
@@ -63,7 +70,7 @@ function Created()
     ControlOffset+=SETTINGS_OFFSET;
 
     ControlOffset+=SETTINGS_OFFSET;
-    CreateTextLabel("Spell Lessons ",ControlLeft,ControlOffset);
+    CreateTextLabel("Spell Lessons",ControlLeft,ControlOffset);
 
     //Spell Lesson Arrow Rando Mode
     ControlOffset+=SETTINGS_OFFSET;
@@ -88,7 +95,7 @@ function Created()
     ControlOffset+=SETTINGS_OFFSET;
 
     ControlOffset+=SETTINGS_OFFSET;
-    CreateTextLabel("Item Swapping ",ControlLeft,ControlOffset);
+    CreateTextLabel("Item Swapping",ControlLeft,ControlOffset);
 
     //Spawner Rando odds
     ControlOffset+=SETTINGS_OFFSET;
@@ -106,7 +113,7 @@ function Created()
     ControlOffset+=SETTINGS_OFFSET;
 
     ControlOffset+=SETTINGS_OFFSET;
-    CreateTextLabel("Vendors ",ControlLeft,ControlOffset);
+    CreateTextLabel("Vendors",ControlLeft,ControlOffset);
 
     //Vendor Swap odds
     ControlOffset+=SETTINGS_OFFSET;
@@ -130,6 +137,75 @@ function Created()
 
     ControlOffset+=SETTINGS_OFFSET;
     duelPrizeMaxEdit = CreateNumInput("Duel Prize Max %: ", "200", 3, ControlLeft, ControlOffset);
+
+    //New section
+    ControlOffset+=SETTINGS_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    CreateTextLabel("Quidditch",ControlLeft,ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerDmgMinEdit = CreateNumInput("Bludger Damage Min %: ", "50", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerDmgMaxEdit = CreateNumInput("Bludger Damage Max %: ", "250", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerSpeedMinEdit = CreateNumInput("Bludger Speed Min %: ", "100", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerSpeedMaxEdit = CreateNumInput("Bludger Speed Max %: ", "300", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerRangeMinEdit = CreateNumInput("Bludger Range Min %: ", "100", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerRangeMaxEdit = CreateNumInput("Bludger Range Max %: ", "300", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerPursueTimeMinEdit = CreateNumInput("Bludger Pursuit Time Min %: ", "150", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidBludgerPursueTimeMaxEdit = CreateNumInput("Bludger Pursuit Time Max %: ", "500", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerRecoveryMinEdit = CreateNumInput("Seeker Recovery Rate Min %: ", "90", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerRecoveryMaxEdit = CreateNumInput("Seeker Recovery Rate Max %: ", "300", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerPenaltyMinEdit = CreateNumInput("Seeker Dmg Penalty Min %: ", "50", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerPenaltyMaxEdit = CreateNumInput("Seeker Dmg Penalty Max %: ", "200", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerKickItvlMinEdit = CreateNumInput("Seeker Kick Interval Min %: ", "25", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerKickItvlMaxEdit = CreateNumInput("Seeker Kick Interval Max %: ", "150", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=MINOR_SEPARATION_OFFSET;
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerDmgMinEdit = CreateNumInput("Seeker Kick Damage Min %: ", "75", 3, ControlLeft, ControlOffset);
+
+    ControlOffset+=SETTINGS_OFFSET;
+    QuidSeekerDmgMaxEdit = CreateNumInput("Seeker Kick Damage Max %: ", "200", 3, ControlLeft, ControlOffset);
+
 
     //DONE button, well below the other settings
     ControlOffset+=DONE_BUTTON_OFFSET;
@@ -164,7 +240,7 @@ function HGameButton CreateDoneButton(String text, int x, int y)
 
     newButt = HGameButton(CreateControl(class'HGameButton', 
                                                 x, //X
-                                                y * 1.2, //Y - TODO: Figure out why this multiplier is needed (related to texture size, maybe?)
+                                                y * 1.23, //Y - TODO: Figure out why this multiplier is needed (related to texture size, maybe?)
                                                 BUTTON_WIDTH, //Width
                                                 BUTTON_HEIGHT)); //Height
     newButt.ShowWindow();
@@ -330,6 +406,24 @@ function SaveAllSettings()
     h.SetGlobalFloat("HP2RVendorPriceMax",GetPercentFloatVal(vendorPriceMaxEdit));
     h.SetGlobalFloat("HP2RDuelPrizeMin",GetPercentFloatVal(duelPrizeMinEdit));
     h.SetGlobalFloat("HP2RDuelPrizeMax",GetPercentFloatVal(duelPrizeMaxEdit));
+
+    h.SetGlobalFloat("HP2RQuidBludgerDmgMin",GetPercentFloatVal(QuidBludgerDmgMinEdit));
+    h.SetGlobalFloat("HP2RQuidBludgerDmgMax",GetPercentFloatVal(QuidBludgerDmgMaxEdit));
+    h.SetGlobalFloat("HP2RQuidBludgerSpeedMin",GetPercentFloatVal(QuidBludgerSpeedMinEdit));
+    h.SetGlobalFloat("HP2RQuidBludgerSpeedMax",GetPercentFloatVal(QuidBludgerSpeedMaxEdit));
+    h.SetGlobalFloat("HP2RQuidBludgerRangeMin",GetPercentFloatVal(QuidBludgerRangeMinEdit));
+    h.SetGlobalFloat("HP2RQuidBludgerRangeMax",GetPercentFloatVal(QuidBludgerRangeMaxEdit));
+    h.SetGlobalFloat("HP2RQuidBludgerPursueTimeMin",GetPercentFloatVal(QuidBludgerPursueTimeMinEdit));
+    h.SetGlobalFloat("HP2RQuidBludgerPursueTimeMax",GetPercentFloatVal(QuidBludgerPursueTimeMaxEdit));
+
+    h.SetGlobalFloat("HP2RQuidSeekerRecoveryMin",GetPercentFloatVal(QuidSeekerRecoveryMinEdit));
+    h.SetGlobalFloat("HP2RQuidSeekerRecoveryMax",GetPercentFloatVal(QuidSeekerRecoveryMaxEdit));
+    h.SetGlobalFloat("HP2RQuidSeekerPenaltyMin",GetPercentFloatVal(QuidSeekerPenaltyMinEdit));
+    h.SetGlobalFloat("HP2RQuidSeekerPenaltyMax",GetPercentFloatVal(QuidSeekerPenaltyMaxEdit));
+    h.SetGlobalFloat("HP2RQuidSeekerKickItvlMin",GetPercentFloatVal(QuidSeekerKickItvlMinEdit));
+    h.SetGlobalFloat("HP2RQuidSeekerKickItvlMax",GetPercentFloatVal(QuidSeekerKickItvlMaxEdit));
+    h.SetGlobalFloat("HP2RQuidSeekerDmgMin",GetPercentFloatVal(QuidSeekerDmgMinEdit));
+    h.SetGlobalFloat("HP2RQuidSeekerDmgMax",GetPercentFloatVal(QuidSeekerDmgMaxEdit));
 
 }
 //#endregion

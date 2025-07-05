@@ -257,6 +257,7 @@ function vanilla_modules()
     modules_to_load[i++] = "HP2RSwapItems";
     modules_to_load[i++] = "HP2RSpellLessons";
     modules_to_load[i++] = "HP2RVendors";
+    modules_to_load[i++] = "HP2RQuidditch";
 }
 //#endregion
 

@@ -59,7 +59,7 @@ function AnyEntry()
     local string c;
     local class<Actor> classes[10];
 
-    Super.FirstEntry();
+    Super.AnyEntry();
 
     ClearClassesList(classes);
     i=0;

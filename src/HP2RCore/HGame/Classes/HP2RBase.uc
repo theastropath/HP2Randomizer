@@ -116,6 +116,14 @@ simulated function float rngrange(float val, float min, float max)
     return ret;
 }
 
+simulated function int rngirange(int min, int max)
+{
+    local int diff;
+
+    diff = max-min;
+    return rng(diff)+min;
+}
+
 simulated function float rngrecip(float val, float max)
 {
     local float f;
