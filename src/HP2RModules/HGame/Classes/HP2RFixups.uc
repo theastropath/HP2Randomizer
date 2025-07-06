@@ -119,116 +119,109 @@ function ReplaceTransitionDragonStatues()
             newScale = 3.0;
             break;
         case 1:
-            newMesh = SkeletalMesh'HProps.skLockhartSt01Mesh';
-            newYaw = 16384;
-            newScale = 3.0;
-            break;
         case 2:
-            newMesh = SkeletalMesh'HProps.skLockhartSt02Mesh';
+            //Bundle the eight Lockhart statues together, but with slightly
+            //higher odds to be selected than other individual meshes
+            switch (rng(8)){
+                case 0:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt01Mesh';
+                    break;
+                case 1:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt02Mesh';
+                    break;
+                case 2:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt03Mesh';
+                    break;
+                case 3:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt04Mesh';
+                    break;
+                case 4:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt05Mesh';
+                    break;
+                case 5:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt06Mesh';
+                    break;
+                case 6:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt07Mesh';
+                    break;
+                case 7:
+                    newMesh = SkeletalMesh'HProps.skLockhartSt08Mesh';
+                    break;
+            }
             newYaw = 16384;
             newScale = 3.0;
             break;
         case 3:
-            newMesh = SkeletalMesh'HProps.skLockhartSt03Mesh';
-            newYaw = 16384;
-            newScale = 3.0;
-            break;
-        case 4:
-            newMesh = SkeletalMesh'HProps.skLockhartSt04Mesh';
-            newYaw = 16384;
-            newScale = 3.0;
-            break;
-        case 5:
-            newMesh = SkeletalMesh'HProps.skLockhartSt05Mesh';
-            newYaw = 16384;
-            newScale = 3.0;
-            break;
-        case 6:
-            newMesh = SkeletalMesh'HProps.skLockhartSt06Mesh';
-            newYaw = 16384;
-            newScale = 3.0;
-            break;
-        case 7:
-            newMesh = SkeletalMesh'HProps.skLockhartSt07Mesh';
-            newYaw = 16384;
-            newScale = 3.0;
-            break;
-        case 8:
-            newMesh = SkeletalMesh'HProps.skLockhartSt08Mesh';
-            newYaw = 16384;
-            newScale = 3.0;
-            break;
-        case 9:
             newMesh = SkeletalMesh'HProps.skArmorWholeSuitMesh';
             newYaw = 0;
             newScale = 3.0;
             break;
-        case 10:
+        case 4:
             newMesh = SkeletalMesh'HProps.skStatueGregorySmarmyMesh';
             newYaw = 0;
             newScale = 3.0;
             break;
-        case 11:
+        case 5:
             newMesh = SkeletalMesh'HProps.skStatueHunchbackWitchMesh';
             newYaw = 0;
             newScale = 3.0;
             break;
-        case 12:
+        case 6:
             newMesh = SkeletalMesh'HProps.skDragonSkeletonMesh';
             newYaw = 16384;
             newScale = 2.2;
             break;
-        case 13:
+        case 7:
             newMesh = SkeletalMesh'HProps.skSnakeHeadMesh';
             newYaw = 16384;
             newScale = 3.0;
             break;
-        case 14:
+        case 8:
             newMesh = SkeletalMesh'HProps.skStatueOwlMesh';
             newYaw = -16384;
             newScale = 5.0;
             break;
-        case 15:
+        case 9:
             newMesh = SkeletalMesh'HProps.skDishesHagridTeaPotMesh';
             newYaw = 0;
             newScale = 17.0;
             break;
-        case 16:
+        case 10:
             newMesh = SkeletalMesh'HProps.skChristmasTreeMesh';
             newYaw = 0;
             newScale = 1.3;
             break;
-        case 17:
+        case 11:
             newMesh = SkeletalMesh'HProps.skFordAngliaDamagedMesh';
             newYaw = 8000;
             newScale = 3.5;
             break;
-        case 18:
+        case 12:
             newMesh = SkeletalMesh'HPModels.skChickenLegMesh';
             newYaw = 0;
             newScale = 20.0;
             break;
-        case 19:
+        case 13:
             newMesh = SkeletalMesh'HProps.skPlantsBushDragonMesh';
             newYaw = 0;
             newScale = 3.0;
             break;
-        case 20:
+        case 14:
             newMesh = SkeletalMesh'HProps.skJarBeansMesh';
             newYaw = 0;
             newScale = 12.0;
             break;
-        case 21:
+        case 15:
             newMesh = SkeletalMesh'HProps.skBarrelMinersMesh';
             newYaw = 0;
             newScale = 2.0;
             break;
-        case 22:
+        case 16:
             newMesh = SkeletalMesh'HProps.skChallengeStarFinalMesh';
             newYaw = 0;
             newScale = 2.0;
             break;
-        case 23:
+        case 17:
             newMesh = SkeletalMesh'HProps.skVaseUrnMesh';
             newYaw = 0;
             newScale = 5.5;

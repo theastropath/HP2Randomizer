@@ -176,6 +176,12 @@ function ShuffleVendorItems()
         }
 
         vendors[i].VendorInit(); //Make sure the dialog is set up right for everyone
+
+        //Reset the beans
+        if (vendors[i].VendorJellybean!=None){
+            vendors[i].VendorJellybean.Destroy();
+        }
+        vendors[i].GotoState('VendorIdle');
     }
 
     RemoveVendorPlaceholders();
@@ -212,6 +218,15 @@ function SwapVendorInfo(Characters a, Characters b)
     } else if ((pvA!=None && pvB==None) || (pvA==None && pvB!=None)){
         //One is a placeholder, physically swap them
         Swap(a,b);
+
+        //Move the WeaponLoc's to be where the character is.  I guess
+        //that doesn't get updated unless you're near the person?
+        if (pvA==None){
+            a.WeaponLoc = a.Location;
+        }
+        if (pvB==None){
+            b.WeaponLoc = b.Location;
+        }
         return;
     }
     //Neither is a placeholder, swap their properties
