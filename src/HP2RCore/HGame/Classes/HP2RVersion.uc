@@ -3,9 +3,9 @@ class HP2RVersion extends Info;
 //#region version info
 simulated static function CurrentVersion(optional out int major, optional out int minor, optional out int patch, optional out int build)
 {
-    major=0;
+    major=1;
     minor=0;
-    patch=1;
+    patch=0;
     build=0;//build can't be higher than 99
 }
 
@@ -19,7 +19,7 @@ simulated static function string VersionString(optional bool full)
     local int major,minor,patch,build;
     local string status;
 
-    status = "Alpha";
+    status = "";
 
 //#endregion
 //////
