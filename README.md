@@ -1,6 +1,10 @@
 # HP2Randomizer
 A randomizer for the PC version of Harry Potter and the Chamber of Secrets
 
+# Installation
+
+Grab the latest release from [HERE](https://github.com/theastropath/HP2Randomizer/releases/latest) and follow the instructions on that page!
+
 # Setting up to compile
 
 Install the game as normal, then install the M212 Editor/Engine Update (Default expected directory is D:\HP2)
